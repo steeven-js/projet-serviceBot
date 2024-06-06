@@ -21,7 +21,7 @@ export default function EcommerceCheckoutOrderSummary({
   total,
   subtotal,
   loading,
-  service,
+  services,
 }) {
   return (
     <Stack
@@ -34,7 +34,15 @@ export default function EcommerceCheckoutOrderSummary({
     >
       <Typography variant="h6"> Order Summary </Typography>
 
-      <ProductItem key={service.id} service={service} />
+      {!!services?.length && (
+        <>
+          {services.map((service) => (
+            <ProductItem key={service.id} service={service} />
+          ))}
+
+          <Divider sx={{ borderStyle: 'dashed' }} />
+        </>
+      )}
 
       <Divider sx={{ borderStyle: 'dashed' }} />
 
@@ -67,15 +75,10 @@ export default function EcommerceCheckoutOrderSummary({
 }
 
 EcommerceCheckoutOrderSummary.propTypes = {
-  loading: PropTypes.bool,
-  subtotal: PropTypes.number,
+  services: PropTypes.array,
   total: PropTypes.number,
-  service: PropTypes.shape({
-    id: PropTypes.number,
-    name: PropTypes.string,
-    price: PropTypes.number,
-    image: PropTypes.string,
-  }),
+  subtotal: PropTypes.number,
+  loading: PropTypes.bool,
 };
 
 // ----------------------------------------------------------------------
@@ -84,7 +87,7 @@ function ProductItem({ service, ...other }) {
   return (
     <Stack direction="row" alignItems="flex-start" {...other}>
       <Image
-        src={service.image}
+        src={service.service.image}
         sx={{
           mr: 2,
           width: 64,
@@ -97,11 +100,11 @@ function ProductItem({ service, ...other }) {
 
       <Stack flexGrow={1}>
         <TextMaxLine variant="body2" line={1} sx={{ fontWeight: 'fontWeightMedium' }}>
-          {service.name}
+          {service.service.name}
         </TextMaxLine>
 
         <Typography variant="subtitle2" sx={{ mt: 0.5, mb: 1.5 }}>
-          {fCurrency(service.price)}
+          {fCurrency(service.service.price)}
         </Typography>
 
         <TextField
@@ -130,9 +133,7 @@ function ProductItem({ service, ...other }) {
 
 ProductItem.propTypes = {
   service: PropTypes.shape({
-    image: PropTypes.string,
-    name: PropTypes.string,
-    price: PropTypes.number,
+    service: PropTypes.object,
   }),
 };
 

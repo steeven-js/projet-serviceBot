@@ -75,7 +75,7 @@ export default function EcommerceProductDetailsInfo({
     console.log('add to cart');
 
     if (auth.currentUser) {
-      await axios.post(`${apiUrl}/carts`, {
+      await axios.post(`${apiUrl}/api/carts`, {
         uid: auth.currentUser.uid,
         product_id: id,
         quantity: 1, // Corrected spelling from quanity to quantity

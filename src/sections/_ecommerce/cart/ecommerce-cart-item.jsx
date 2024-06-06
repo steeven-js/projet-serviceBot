@@ -12,7 +12,7 @@ import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function EcommerceCartItem({ product, wishlist }) {
+export default function EcommerceCartItem({ cart, wishlist }) {
   return (
     <Stack
       direction="row"
@@ -25,7 +25,7 @@ export default function EcommerceCartItem({ product, wishlist }) {
     >
       <Stack direction="row" alignItems="center" flexGrow={1}>
         <Image
-          src={product.coverUrl}
+          src={cart.service.image}
           sx={{
             width: 80,
             height: 80,
@@ -36,9 +36,9 @@ export default function EcommerceCartItem({ product, wishlist }) {
         />
 
         <Stack spacing={0.5} sx={{ p: 2 }}>
-          <Typography variant="subtitle2">{product.name}</Typography>
+          <Typography variant="subtitle2">{cart.service.name}</Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Color: Grey Space
+            {cart.service.caption}
           </Typography>
         </Stack>
       </Stack>
@@ -52,6 +52,7 @@ export default function EcommerceCartItem({ product, wishlist }) {
             native: true,
           }}
           sx={{ width: 80 }}
+          value={cart.quantity}
         >
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((option) => (
             <option key={option} value={option}>
@@ -61,7 +62,7 @@ export default function EcommerceCartItem({ product, wishlist }) {
         </TextField>
       </Stack>
 
-      <Stack sx={{ width: 120, typography: 'subtitle2' }}> {fCurrency(product.price)} </Stack>
+      <Stack sx={{ width: 120, typography: 'subtitle2' }}> {fCurrency(cart.price)} </Stack>
 
       <IconButton>
         <Iconify icon="carbon:trash-can" />
@@ -77,10 +78,6 @@ export default function EcommerceCartItem({ product, wishlist }) {
 }
 
 EcommerceCartItem.propTypes = {
-  product: PropTypes.shape({
-    coverUrl: PropTypes.string,
-    name: PropTypes.string,
-    price: PropTypes.number,
-  }),
+  cart: PropTypes.object,
   wishlist: PropTypes.bool,
 };

@@ -25,11 +25,6 @@ export const fetcher = async (args) => {
 
 // ----------------------------------------------------------------------
 
-// Updated function for making POST requests without unnecessary try/catch
-export const postRequest = (url, data, config) => axiosInstance.post(url, data, { ...config }).then(response => response.data);
-
-// ----------------------------------------------------------------------
-
 export const endpoints = {
   chat: '/api/chat',
   kanban: '/api/kanban',
@@ -54,5 +49,8 @@ export const endpoints = {
     list: '/api/products',
     details: '/api/product/details',
     search: '/api/product/search',
+  },
+  cart: {
+    list: '/api/carts',
   },
 };

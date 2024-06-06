@@ -1,3 +1,4 @@
+import useSWR from 'swr';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 
@@ -13,12 +14,15 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useAuth } from 'src/hooks/use-auth';
 
+import { fetcher, endpoints } from 'src/utils/axios';
+
 import { _services } from 'src/_mock';
 
 import FormProvider from 'src/components/hook-form';
 
 import EcommerceCheckoutOrderSummary from '../checkout/ecommerce-checkout-order-summary';
 import EcommerceCheckoutPaymentMethod from '../checkout/ecommerce-checkout-payment-method';
+
 
 // ----------------------------------------------------------------------
 
@@ -34,12 +38,23 @@ const PAYMENT_OPTIONS = [
 
 export default function EcommerceCheckoutView() {
 
-  // utiliser route pour recuperer l'id
-  const  id  = 1;
-
   const router = useRouter();
 
-  const _mockService = _services.find((service) => service.id === Number(id));
+  // carts
+  const { data } = useSWR(endpoints.cart.list, fetcher);
+
+  // Filtrer les services correspondant aux product_id dans le panier
+  const _cartServices = data ? data.map(cartItem => {
+    const service = _services.find(_service => _service.id === cartItem.product_id);
+    return { ...cartItem, service };
+  }) : [];
+
+  // Calculer le total des prix
+  const totalPrice = _cartServices.reduce((acc, item) => acc + parseFloat(item.price), 0);
+
+  console.log('data:', data);
+  console.log('cartServices:', _cartServices);
+  console.log('totalPrice:', totalPrice);
 
   const { user } = useAuth();
 
@@ -74,7 +89,7 @@ export default function EcommerceCheckoutView() {
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async (_data) => {
     try {
       if (!user) {
         router.push(paths.loginBackground);
@@ -83,7 +98,7 @@ export default function EcommerceCheckoutView() {
         reset();
         // router.push(paths.eCommerce.orderCompleted);
         window.location.href = paths.stripe.standards;
-        console.log('DATA', data);
+        console.log('DATA', _data);
       }
     } catch (error) {
       console.error(error);
@@ -120,9 +135,9 @@ export default function EcommerceCheckoutView() {
 
           <Grid xs={12} md={4}>
             <EcommerceCheckoutOrderSummary
-              total={_mockService.price}
-              subtotal={_mockService.price}
-              service={_mockService}
+              total={totalPrice}
+              subtotal={totalPrice}
+              services={_cartServices}
               loading={isSubmitting}
             />
           </Grid>

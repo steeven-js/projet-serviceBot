@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Unstable_Grid2';
 import Container from '@mui/material/Container';
@@ -6,8 +8,6 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
-import { _products } from 'src/_mock';
-
 import Iconify from 'src/components/iconify';
 
 import EcommerceCartList from '../cart/ecommerce-cart-list';
@@ -15,7 +15,7 @@ import EcommerceCartSummary from '../cart/ecommerce-cart-summary';
 
 // ----------------------------------------------------------------------
 
-export default function EcommerceCartView() {
+export default function EcommerceCartView({ cartServices, totalPrice }) {
   return (
     <Container
       sx={{
@@ -30,16 +30,13 @@ export default function EcommerceCartView() {
 
       <Grid container spacing={{ xs: 5, md: 8 }}>
         <Grid xs={12} md={8}>
-          <EcommerceCartList products={_products.slice(0, 4)} />
+          <EcommerceCartList cartServices={cartServices} />
         </Grid>
 
         <Grid xs={12} md={4}>
           <EcommerceCartSummary
-            tax={7}
-            total={357.09}
-            subtotal={89.09}
-            shipping={55.47}
-            discount={16.17}
+            total={totalPrice}
+            subtotal={totalPrice}
           />
         </Grid>
       </Grid>
@@ -56,3 +53,9 @@ export default function EcommerceCartView() {
     </Container>
   );
 }
+
+// Prop types
+EcommerceCartView.propTypes = {
+  cartServices: PropTypes.array,
+  totalPrice: PropTypes.number,
+};

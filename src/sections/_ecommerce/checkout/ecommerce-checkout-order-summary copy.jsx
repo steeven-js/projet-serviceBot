@@ -19,7 +19,7 @@ import TextMaxLine from 'src/components/text-max-line';
 
 // ----------------------------------------------------------------------
 
-export default function EcommerceCheckoutOrderSummary({
+export default function EcommerceCheckoutOrderSummaryOld({
   tax,
   total,
   subtotal,
@@ -95,7 +95,7 @@ export default function EcommerceCheckoutOrderSummary({
   );
 }
 
-EcommerceCheckoutOrderSummary.propTypes = {
+EcommerceCheckoutOrderSummaryOld.propTypes = {
   discount: PropTypes.number,
   loading: PropTypes.bool,
   products: PropTypes.array,

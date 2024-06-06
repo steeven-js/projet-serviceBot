@@ -1,3 +1,4 @@
+import useSWR from 'swr';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -15,6 +16,8 @@ import { RouterLink } from 'src/routes/components';
 import { useAuth } from 'src/hooks/use-auth';
 import { useOffSetTop } from 'src/hooks/use-off-set-top';
 import { useResponsive } from 'src/hooks/use-responsive';
+
+import { fetcher, endpoints } from 'src/utils/axios';
 
 import { bgBlur } from 'src/theme/css';
 
@@ -39,6 +42,9 @@ export default function Header({ headerOnDark }) {
 
   // Auth check
   const { user, loading } = useAuth();
+
+  // Auth cart
+  const { data } = useSWR(endpoints.cart.list, fetcher);
 
   const navData = user ? (
     [
@@ -151,7 +157,7 @@ export default function Header({ headerOnDark }) {
 
           <Stack spacing={2} direction="row" alignItems="center" justifyContent="flex-end">
             <Stack spacing={1} direction="row" alignItems="center">
-              <Badge badgeContent={4} color="error">
+              <Badge badgeContent={data ? data.length : '0'} color="error">
                 <IconButton
                   component={RouterLink}
                   href={paths.eCommerce.cart}

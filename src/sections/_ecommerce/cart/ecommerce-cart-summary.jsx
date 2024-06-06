@@ -5,18 +5,19 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { alpha } from '@mui/material/styles';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
-import { fPercent, fCurrency } from 'src/utils/format-number';
+import { fCurrency } from 'src/utils/format-number';
 
 // ----------------------------------------------------------------------
 
-export default function EcommerceCartSummary({ tax, total, subtotal, shipping, discount }) {
+export default function EcommerceCartSummary({
+  total,
+  subtotal,
+}) {
   return (
     <Stack
       spacing={3}
@@ -30,25 +31,7 @@ export default function EcommerceCartSummary({ tax, total, subtotal, shipping, d
 
       <Stack spacing={2}>
         <Row label="Subtotal" value={fCurrency(subtotal)} />
-
-        <Row label="Shipping" value={fCurrency(shipping)} />
-
-        <Row label="Discount (15%)" value={`-${fCurrency(discount)}`} />
-
-        <Row label="Tax" value={fPercent(tax)} />
       </Stack>
-
-      <TextField
-        hiddenLabel
-        placeholder="Discount Code"
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <Button>Apply</Button>
-            </InputAdornment>
-          ),
-        }}
-      />
 
       <Divider sx={{ borderStyle: 'dashed' }} />
 
@@ -75,10 +58,7 @@ export default function EcommerceCartSummary({ tax, total, subtotal, shipping, d
 }
 
 EcommerceCartSummary.propTypes = {
-  tax: PropTypes.number,
   total: PropTypes.number,
-  discount: PropTypes.number,
-  shipping: PropTypes.number,
   subtotal: PropTypes.number,
 };
 

@@ -6,9 +6,13 @@ import Scrollbar from 'src/components/scrollbar';
 
 import EcommerceCartItem from './ecommerce-cart-item';
 
+
+
+
 // ----------------------------------------------------------------------
 
-export default function EcommerceCartList({ products, wishlist = false }) {
+export default function EcommerceCartList({ cartServices, wishlist = false }) {
+  console.log('cartServices:', cartServices)
   return (
     <Scrollbar>
       <Stack
@@ -28,14 +32,15 @@ export default function EcommerceCartList({ products, wishlist = false }) {
         {wishlist && <Stack sx={{ width: 36 }} />}
       </Stack>
 
-      {products.map((product) => (
-        <EcommerceCartItem key={product.id} product={product} wishlist={wishlist} />
+      {cartServices.map((cart) => (
+        // console.log(cart)
+        <EcommerceCartItem key={cart.id} cart={cart} wishlist={wishlist} />
       ))}
     </Scrollbar>
   );
 }
 
 EcommerceCartList.propTypes = {
-  products: PropTypes.array,
+  cartServices: PropTypes.array,
   wishlist: PropTypes.bool,
 };
