@@ -81,6 +81,7 @@ export default function RegisterBackgroundView() {
       if (auth.currentUser) {
         await axios.post(apiUrl, {
           uid: auth.currentUser.uid,
+          name: data.fullName,
           email: data.email,
         });
       }

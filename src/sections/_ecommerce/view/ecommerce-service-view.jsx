@@ -1,3 +1,5 @@
+/* eslint-disable import/no-named-as-default-member */
+/* eslint-disable import/no-named-as-default */
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
@@ -62,6 +64,7 @@ export default function EcommerceServiceView({ _mockService }) {
 
           <Grid xs={12} md={6} lg={5}>
             <EcommerceProductDetailsInfo
+              id={_mockService.id}
               name={_mockService.name}
               price={_mockService.price}
               caption={_mockService.caption}

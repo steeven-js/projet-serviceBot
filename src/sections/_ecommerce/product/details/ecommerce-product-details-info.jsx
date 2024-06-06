@@ -1,3 +1,7 @@
+/* eslint-disable import/no-named-as-default-member */
+/* eslint-disable import/no-named-as-default */
+/* eslint-disable object-shorthand */
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import { useState, useCallback } from 'react';
 
@@ -9,6 +13,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
 import { useResponsive } from 'src/hooks/use-responsive';
@@ -16,6 +21,7 @@ import { useResponsive } from 'src/hooks/use-responsive';
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 
+import { auth } from "../../../../../firebase";
 import ProductPrice from '../../common/product-price';
 import ProductColorPicker from '../../common/product-color-picker';
 import ProductOptionPicker from '../../common/product-option-picker';
@@ -39,6 +45,7 @@ const MEMORY_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function EcommerceProductDetailsInfo({
+  id,
   name,
   price,
   ratingNumber,
@@ -52,6 +59,10 @@ export default function EcommerceProductDetailsInfo({
 
   const [memory, setMemory] = useState('128gb');
 
+  const apiUrl = import.meta.env.VITE_HOST_API;
+
+  const router = useRouter()
+
   const handleChangeColor = useCallback((event) => {
     setColor(event.target.value);
   }, []);
@@ -59,6 +70,21 @@ export default function EcommerceProductDetailsInfo({
   const handleChangeMemory = useCallback((event) => {
     setMemory(event.target.value);
   }, []);
+
+  const addToCart = async () => {
+    console.log('add to cart');
+
+    if (auth.currentUser) {
+      await axios.post(`${apiUrl}/carts`, {
+        uid: auth.currentUser.uid,
+        product_id: id,
+        quantity: 1, // Corrected spelling from quanity to quantity
+        price: price,
+        status: 'new',
+      });
+      router.push(paths.eCommerce.cart); // Navigate to the cart page after adding to cart
+    }
+  };
 
   return (
     <>
@@ -134,8 +160,7 @@ export default function EcommerceProductDetailsInfo({
           </Button>
 
           <Button
-            component={RouterLink}
-            href={paths.eCommerce.cart}
+            onClick={addToCart}
             fullWidth={!mdUp}
             size="large"
             color="primary"
@@ -166,6 +191,7 @@ export default function EcommerceProductDetailsInfo({
 }
 
 EcommerceProductDetailsInfo.propTypes = {
+  id: PropTypes.number,
   caption: PropTypes.string,
   name: PropTypes.string,
   price: PropTypes.number,

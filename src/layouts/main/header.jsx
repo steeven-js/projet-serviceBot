@@ -4,10 +4,10 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import AppBar from '@mui/material/AppBar';
-import { IconButton } from '@mui/material';
 import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
 import { useTheme } from '@mui/material/styles';
+import { Badge, IconButton } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
@@ -151,6 +151,18 @@ export default function Header({ headerOnDark }) {
 
           <Stack spacing={2} direction="row" alignItems="center" justifyContent="flex-end">
             <Stack spacing={1} direction="row" alignItems="center">
+              <Badge badgeContent={4} color="error">
+                <IconButton
+                  component={RouterLink}
+                  href={paths.eCommerce.cart}
+                  size="small"
+                  color="inherit"
+                  sx={{ p: 0 }}
+                >
+                  <Iconify icon="carbon:shopping-cart" width={24} />
+                </IconButton>
+              </Badge>
+
               <IconButton
                 component={RouterLink}
                 href={user ? paths.eCommerce.account.personal : paths.loginBackground}
