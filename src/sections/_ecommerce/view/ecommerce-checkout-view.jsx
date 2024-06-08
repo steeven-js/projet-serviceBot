@@ -1,8 +1,11 @@
 import useSWR from 'swr';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
+import { loadStripe } from '@stripe/stripe-js';
 
 import Box from '@mui/material/Box';
+import { Button } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -52,11 +55,40 @@ export default function EcommerceCheckoutView() {
   // Calculer le total des prix
   const totalPrice = _cartServices.reduce((acc, item) => acc + parseFloat(item.price), 0);
 
-  console.log('data:', data);
-  console.log('cartServices:', _cartServices);
-  console.log('totalPrice:', totalPrice);
+  // console.log('data:', data);
+  // console.log('cartServices:', _cartServices);
+  // console.log('totalPrice:', totalPrice);
 
   const { user } = useAuth();
+
+  const makePayment = async () => {
+    const stripe = await loadStripe('pk_test_51LeOHYBy39DOXZlGRv6tHgXPh93Q0wEpgvTbT6ASeEE7p0miCzLzZp3LRmZiCzk7ids8vFrGQjjlNFLsub3wyVnC00cvQ0H2eI');
+
+    const body = {
+      products: _cartServices,
+    };
+
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/create-checkout-session', body);
+
+      if (response.status !== 200) {
+        throw new Error('Failed to create checkout session');
+      }
+
+      const session = response.data;
+
+      const result = await stripe.redirectToCheckout({
+        sessionId: session.id,
+      });
+
+      if (result.error) {
+        console.log(result.error.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
 
   const defaultValues = {
     firstName: 'Jayvion',
@@ -143,6 +175,15 @@ export default function EcommerceCheckoutView() {
           </Grid>
         </Grid>
       </FormProvider>
+
+      <Button
+            onClick={makePayment}
+            variant="contained"
+            color="primary"
+            style={{ display: 'flex', alignItems: 'center' }}
+        >
+            Make Payment
+        </Button>
     </Container>
   );
 }
