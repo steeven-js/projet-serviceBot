@@ -2,7 +2,6 @@ import useSWR from 'swr';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
-import { loadStripe } from '@stripe/stripe-js';
 
 import Box from '@mui/material/Box';
 import { Button } from '@mui/material';
@@ -25,7 +24,6 @@ import FormProvider from 'src/components/hook-form';
 
 import EcommerceCheckoutOrderSummary from '../checkout/ecommerce-checkout-order-summary';
 import EcommerceCheckoutPaymentMethod from '../checkout/ecommerce-checkout-payment-method';
-
 
 // ----------------------------------------------------------------------
 
@@ -61,31 +59,13 @@ export default function EcommerceCheckoutView() {
 
   const { user } = useAuth();
 
-  const makePayment = async () => {
-    const stripe = await loadStripe('pk_test_51LeOHYBy39DOXZlGRv6tHgXPh93Q0wEpgvTbT6ASeEE7p0miCzLzZp3LRmZiCzk7ids8vFrGQjjlNFLsub3wyVnC00cvQ0H2eI');
-
-    const body = {
-      products: _cartServices,
-    };
-
+  const handleCheckout = async () => {
     try {
-      const response = await axios.post('http://127.0.0.1:8000/create-checkout-session', body);
-
-      if (response.status !== 200) {
-        throw new Error('Failed to create checkout session');
-      }
-
-      const session = response.data;
-
-      const result = await stripe.redirectToCheckout({
-        sessionId: session.id,
-      });
-
-      if (result.error) {
-        console.log(result.error.message);
-      }
+      const response = await axios.post('http://127.0.0.1:8000/api/order/pay',
+        { _cartServices, success_url: `http://localhost:3001` });
+      window.location.href = response.data.url;
     } catch (error) {
-      console.error('Error:', error);
+      console.log(error);
     }
   };
 
@@ -177,13 +157,13 @@ export default function EcommerceCheckoutView() {
       </FormProvider>
 
       <Button
-            onClick={makePayment}
-            variant="contained"
-            color="primary"
-            style={{ display: 'flex', alignItems: 'center' }}
-        >
-            Make Payment
-        </Button>
+        onClick={handleCheckout}
+        variant="contained"
+        color="primary"
+        style={{ display: 'flex', alignItems: 'center' }}
+      >
+        Pay
+      </Button>
     </Container>
   );
 }
