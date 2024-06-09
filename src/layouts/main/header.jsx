@@ -1,4 +1,3 @@
-import useSWR from 'swr';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -13,11 +12,9 @@ import { Badge, IconButton } from '@mui/material';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
-import { useAuth } from 'src/hooks/use-auth';
+import useCartService from 'src/hooks/use-cart-service';
 import { useOffSetTop } from 'src/hooks/use-off-set-top';
 import { useResponsive } from 'src/hooks/use-responsive';
-
-import { fetcher, endpoints } from 'src/utils/axios';
 
 import { bgBlur } from 'src/theme/css';
 
@@ -40,11 +37,7 @@ export default function Header({ headerOnDark }) {
 
   const mdUp = useResponsive('up', 'md');
 
-  // Auth check
-  const { user, loading } = useAuth();
-
-  // Auth cart
-  const { data } = useSWR(endpoints.cart.list, fetcher);
+  const {_cartServices, user, loading} = useCartService();
 
   const navData = user ? (
     [
@@ -157,10 +150,10 @@ export default function Header({ headerOnDark }) {
 
           <Stack spacing={2} direction="row" alignItems="center" justifyContent="flex-end">
             <Stack spacing={1} direction="row" alignItems="center">
-              <Badge badgeContent={data ? data.length : '0'} color="error">
+              <Badge badgeContent={loading ? '0' : _cartServices.length} color="error">
                 <IconButton
                   component={RouterLink}
-                  href={paths.eCommerce.cart}
+                  to={paths.eCommerce.cart}
                   size="small"
                   color="inherit"
                   sx={{ p: 0 }}

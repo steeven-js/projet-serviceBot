@@ -12,7 +12,6 @@ import EcommerceCartItem from './ecommerce-cart-item';
 // ----------------------------------------------------------------------
 
 export default function EcommerceCartList({ cartServices, wishlist = false }) {
-  console.log('cartServices:', cartServices)
   return (
     <Scrollbar>
       <Stack

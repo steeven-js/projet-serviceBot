@@ -3,7 +3,6 @@ import { Outlet } from 'react-router-dom';
 
 import MainLayout from 'src/layouts/main';
 import AccountLayout from 'src/layouts/account';
-import EcommerceLayout from 'src/layouts/ecommerce';
 
 // ----------------------------------------------------------------------
 
@@ -30,9 +29,7 @@ export const eCommerceRoutes = [
     path: 'e-commerce',
     element: (
       <MainLayout>
-        <EcommerceLayout>
           <Outlet />
-        </EcommerceLayout>
       </MainLayout>
     ),
     children: [
